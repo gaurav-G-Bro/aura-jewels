@@ -155,7 +155,7 @@ const STORE_PRODUCTS = [
     badge: 'Hot',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1599459182681-c938b7f3eb6e?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80',
       'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=900&q=80'
     ],
     description: 'A rich green choker set with meenakari-inspired detailing, created for mehendi and festive functions.'

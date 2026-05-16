@@ -1,6 +1,8 @@
 const INR = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
 const LS_CART = 'aura_cart_v1';
 const LS_WISH = 'aura_wishlist_v1';
+const LS_COUPON = 'aura_coupon_v1';
+const LS_GIFT_WRAP = 'aura_gift_wrap_v1';
 
 const qs = (sel, root = document) => root.querySelector(sel);
 const qsa = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -17,7 +19,8 @@ function writeLS(key, value) { localStorage.setItem(key, JSON.stringify(value));
 let cart = readLS(LS_CART, []);
 let wishlist = readLS(LS_WISH, []);
 let selectedQuickProduct = null;
-let activeCoupon = '';
+let activeCoupon = readLS(LS_COUPON, '');
+let giftWrapEnabled = readLS(LS_GIFT_WRAP, false);
 
 function productUrl(id) { return `product.html?id=${encodeURIComponent(id)}`; }
 function shopUrl(params = {}) {
@@ -197,6 +200,8 @@ function openModal(html) {
 }
 function closeModal() {
   qs('[data-modal]')?.classList.remove('open');
+  const content = qs('[data-modal-content]');
+  if (content) content.innerHTML = '';
   document.body.classList.remove('locked');
 }
 function openSearch() {
@@ -255,9 +260,10 @@ function updateCounts() {
 }
 function cartTotals() {
   const subtotal = cart.reduce((sum, item) => sum + (byId(item.id).price * item.qty), 0);
-  const shipping = subtotal === 0 || subtotal >= 1299 ? 0 : 99;
+  // Demo storefront: shipping is shown as Free so the final total matches the product prices.
+  const shipping = 0;
   const couponDiscount = activeCoupon.toUpperCase() === 'AURA10' && subtotal >= 1299 ? Math.round(subtotal * 0.1) : 0;
-  const giftWrap = qs('[data-gift-wrap]')?.checked ? 49 : 0;
+  const giftWrap = giftWrapEnabled ? 49 : 0;
   const total = Math.max(0, subtotal + shipping + giftWrap - couponDiscount);
   return { subtotal, shipping, couponDiscount, giftWrap, total };
 }
@@ -265,45 +271,77 @@ function cartTotals() {
 function productCard(product) {
   return `
     <article class="product-card" data-product-card data-category="${product.category}" data-price="${product.price}">
-      <a class="product-media" href="${productUrl(product.id)}">
+      <div class="product-media">
+        <a class="product-image-link" href="${productUrl(product.id)}" aria-label="View ${product.name}">
+          <img src="${product.images[0]}" alt="${product.name}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/900x900/f9e4dc/7d2734?text=Jewellery'">
+        </a>
         <span class="product-badge">${product.badge}</span>
-        <img src="${product.images[0]}" alt="${product.name}" loading="lazy" onerror="this.src='https://placehold.co/900x1100/f9e4dc/5b1725?text=Aarunya+Jewels'">
-        <div class="product-actions" onclick="event.preventDefault()">
-          <button class="quick-btn" data-quick="${product.id}">QUICK VIEW</button>
-          <button class="wish-btn ${wishlist.includes(product.id) ? 'active' : ''}" data-wish-id="${product.id}" aria-label="Wishlist">♥</button>
+        <div class="product-actions">
+          <button type="button" class="quick-btn" data-quick="${product.id}">QUICK VIEW</button>
+          <button type="button" class="wish-btn ${wishlist.includes(product.id) ? 'active' : ''}" data-wish-id="${product.id}" aria-label="Wishlist">♥</button>
         </div>
-      </a>
+      </div>
       <div class="product-info">
         <a href="${productUrl(product.id)}"><h3>${product.name}</h3></a>
         <div class="rating">★ ${product.rating} <span style="color:var(--muted)">(${product.reviews})</span></div>
         <div class="price-row"><span class="price">${money(product.price)}</span><span class="mrp">${money(product.mrp)}</span><span class="off">${discount(product)}% Off</span></div>
-        <button class="add-btn" data-add="${product.id}" ${product.stock <= 0 ? 'disabled' : ''}>${product.stock <= 0 ? 'Sold Out' : 'Add to cart'}</button>
+        <button type="button" class="add-btn" data-add="${product.id}" ${product.stock <= 0 ? 'disabled' : ''}>${product.stock <= 0 ? 'Sold Out' : 'Add to cart'}</button>
       </div>
     </article>`;
 }
 
 function bindProductActions(root = document) {
-  qsa('[data-add]', root).forEach(btn => btn.addEventListener('click', () => addToCart(btn.dataset.add)));
-  qsa('[data-quick]', root).forEach(btn => btn.addEventListener('click', () => quickView(btn.dataset.quick)));
-  qsa('[data-wish-id]', root).forEach(btn => btn.addEventListener('click', () => toggleWishlist(btn.dataset.wishId)));
+  qsa('[data-add]', root).forEach(btn => {
+    if (btn.dataset.boundAction) return;
+    btn.dataset.boundAction = '1';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      addToCart(btn.dataset.add);
+    });
+  });
+  qsa('[data-quick]', root).forEach(btn => {
+    if (btn.dataset.boundAction) return;
+    btn.dataset.boundAction = '1';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      quickView(btn.dataset.quick);
+    });
+  });
+  qsa('[data-wish-id]', root).forEach(btn => {
+    if (btn.dataset.boundAction) return;
+    btn.dataset.boundAction = '1';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleWishlist(btn.dataset.wishId);
+    });
+  });
 }
 
 function quickView(id) {
   const p = byId(id);
   selectedQuickProduct = p;
-  const sizes = p.sizes.map((s, idx) => `<button class="option-pill ${idx === 0 ? 'active' : ''}" data-qv-size="${s}">${s}</button>`).join('');
+  let qvQty = 1;
+  const sizes = p.sizes.map((s, idx) => `<button type="button" class="option-pill ${idx === 0 ? 'active' : ''}" data-qv-size="${s}">${s}</button>`).join('');
   openModal(`
     <div class="quick-view">
-      <img src="${p.images[0]}" alt="${p.name}" onerror="this.src='https://placehold.co/900x1100/f9e4dc/5b1725?text=Aarunya+Jewels'">
+      <div class="quick-view-media">
+        <img src="${p.images[0]}" alt="${p.name}" onerror="this.onerror=null;this.src='https://placehold.co/900x900/f9e4dc/7d2734?text=Jewellery'">
+      </div>
       <div class="quick-info">
-        <button class="close-btn" style="float:right" data-modal-close>×</button>
+        <button type="button" class="close-btn" style="float:right" data-modal-close>×</button>
         <span class="badge">${p.badge}</span>
-        <h2 class="section-title" style="font-size:2.4rem;margin:12px 0">${p.name}</h2>
+        <h2 class="section-title" style="margin:12px 0">${p.name}</h2>
         <div class="rating">★ ${p.rating} (${p.reviews} reviews)</div>
-        <div class="price-row" style="margin:10px 0 18px"><span class="price">${money(p.price)}</span><span class="mrp">${money(p.mrp)}</span><span class="off">${discount(p)}% Off</span></div>
+        <div class="price-row" style="margin:10px 0 16px"><span class="price">${money(p.price)}</span><span class="mrp">${money(p.mrp)}</span><span class="off">${discount(p)}% Off</span></div>
         <p class="section-copy">${p.description}</p>
         <h4>Size</h4><div class="option-pills">${sizes}</div>
-        <button class="btn full" data-qv-add="${p.id}" ${p.stock <= 0 ? 'disabled' : ''}>${p.stock <= 0 ? 'Sold Out' : 'Add to Cart'}</button>
+        <div class="detail-actions" style="grid-template-columns:120px 1fr">
+          <div class="qty-control"><button type="button" data-qv-dec>−</button><span data-qv-qty>1</span><button type="button" data-qv-inc>+</button></div>
+          <button type="button" class="btn" data-qv-add="${p.id}" ${p.stock <= 0 ? 'disabled' : ''}>${p.stock <= 0 ? 'Sold Out' : 'Add to Cart'}</button>
+        </div>
         <a class="btn secondary full" style="margin-top:10px" href="${productUrl(p.id)}">View full details</a>
       </div>
     </div>`);
@@ -311,9 +349,12 @@ function quickView(id) {
     qsa('[data-qv-size]').forEach(x => x.classList.remove('active'));
     b.classList.add('active');
   }));
-  qs('[data-qv-add]')?.addEventListener('click', () => {
+  qs('[data-qv-inc]')?.addEventListener('click', () => { qvQty += 1; qs('[data-qv-qty]').textContent = qvQty; });
+  qs('[data-qv-dec]')?.addEventListener('click', () => { qvQty = Math.max(1, qvQty - 1); qs('[data-qv-qty]').textContent = qvQty; });
+  qs('[data-qv-add]')?.addEventListener('click', (e) => {
+    e.preventDefault();
     const size = qs('[data-qv-size].active')?.dataset.qvSize || 'Default';
-    addToCart(id, 1, size);
+    addToCart(id, qvQty, size);
     closeModal();
   });
 }
@@ -357,7 +398,7 @@ function renderSearchResults(term) {
   if (!wrap) return;
   const query = term.trim().toLowerCase();
   const results = STORE_PRODUCTS.filter(p => !query || `${p.name} ${p.category} ${p.collection} ${p.occasion} ${p.color}`.toLowerCase().includes(query)).slice(0, 8);
-  wrap.innerHTML = results.map(p => `<a class="search-result" href="${productUrl(p.id)}"><img src="${p.images[0]}" alt="${p.name}"><div><strong>${p.name}</strong><p class="section-copy" style="margin:4px 0">${p.category} · ${p.collection}</p><span class="price">${money(p.price)}</span></div><button class="btn secondary" type="button" data-add="${p.id}" onclick="event.preventDefault()">Add</button></a>`).join('') || `<div class="empty-state">No products found.</div>`;
+  wrap.innerHTML = results.map(p => `<a class="search-result" href="${productUrl(p.id)}"><img src="${p.images[0]}" alt="${p.name}"><div><strong>${p.name}</strong><p class="section-copy" style="margin:4px 0">${p.category} · ${p.collection}</p><span class="price">${money(p.price)}</span></div><button class="btn secondary" type="button" data-add="${p.id}">Add</button></a>`).join('') || `<div class="empty-state">No products found.</div>`;
   bindProductActions(wrap);
 }
 
@@ -456,7 +497,7 @@ function renderProductPage() {
   root.innerHTML = `
     <div class="gallery">
       <div class="thumb-list">${product.images.map((src, i) => `<button class="thumb ${i===0?'active':''}" data-thumb="${src}"><img src="${src}" alt="${product.name} ${i+1}"></button>`).join('')}</div>
-      <div class="main-photo"><img data-main-photo src="${product.images[0]}" alt="${product.name}" onerror="this.src='https://placehold.co/900x1100/f9e4dc/5b1725?text=Aarunya+Jewels'"></div>
+      <div class="main-photo"><img data-main-photo src="${product.images[0]}" alt="${product.name}" onerror="this.onerror=null;this.src='https://placehold.co/900x900/f9e4dc/7d2734?text=Jewellery'"></div>
     </div>
     <div class="detail-panel">
       <span class="badge">${product.badge}</span>
@@ -497,11 +538,21 @@ function renderCartPage() {
   root.innerHTML = `
     <div class="cart-layout">
       <div class="cart-list">${cart.map(item => { const p = byId(item.id); return `<div class="cart-row"><img src="${p.images[0]}" alt="${p.name}"><div><h3>${p.name}</h3><p>${item.size} · ${p.category}</p><div class="qty-control" style="margin-top:10px"><button data-dec="${item.key}">−</button><span>${item.qty}</span><button data-inc="${item.key}">+</button></div></div><div class="cart-side"><strong>${money(p.price * item.qty)}</strong><br><button class="remove-btn" data-remove="${item.key}">Remove</button></div></div>`; }).join('')}</div>
-      <aside class="summary-card"><h3>Order Summary</h3><div class="coupon"><input class="form-control" data-coupon placeholder="Coupon code"><button class="btn secondary" data-apply-coupon>Apply</button></div><label class="check-row"><input type="checkbox" data-gift-wrap> Add gift wrap ₹49</label><div data-summary-lines></div><a class="btn full" href="checkout.html">Proceed to Checkout</a><a class="btn secondary full" style="margin-top:10px" href="shop.html">Continue Shopping</a></aside>
+      <aside class="summary-card"><h3>Order Summary</h3><div class="coupon"><input class="form-control" data-coupon placeholder="Coupon code" value="${activeCoupon}"><button class="btn secondary" data-apply-coupon>Apply</button></div><label class="check-row"><input type="checkbox" data-gift-wrap ${giftWrapEnabled ? 'checked' : ''}> Add gift wrap ₹49</label><div data-summary-lines></div><a class="btn full" href="checkout.html">Proceed to Checkout</a><a class="btn secondary full" style="margin-top:10px" href="shop.html">Continue Shopping</a></aside>
     </div>`;
   bindCartControls(root);
-  qs('[data-apply-coupon]')?.addEventListener('click', () => { activeCoupon = qs('[data-coupon]').value.trim(); renderCartPage(); toast(activeCoupon.toUpperCase() === 'AURA10' ? 'Coupon applied.' : 'Invalid demo coupon. Try AURA10.'); });
-  qs('[data-gift-wrap]')?.addEventListener('change', () => renderSummaryLines());
+  qs('[data-apply-coupon]')?.addEventListener('click', () => {
+    const entered = qs('[data-coupon]').value.trim();
+    activeCoupon = entered.toUpperCase() === 'AURA10' ? entered : '';
+    writeLS(LS_COUPON, activeCoupon);
+    renderCartPage();
+    toast(entered.toUpperCase() === 'AURA10' ? 'Coupon applied.' : 'Invalid demo coupon. Try AURA10.');
+  });
+  qs('[data-gift-wrap]')?.addEventListener('change', (e) => {
+    giftWrapEnabled = e.target.checked;
+    writeLS(LS_GIFT_WRAP, giftWrapEnabled);
+    renderSummaryLines();
+  });
   renderSummaryLines();
 }
 function renderSummaryLines() {
@@ -532,7 +583,7 @@ function renderCheckout() {
         <br><div class="notice">This checkout is for demo purpose only. Submitting the form will not place a real order or collect payment.</div><br>
         <button class="btn full" type="submit">Place Demo Order</button>
       </form>
-      <aside class="summary-card"><h3>Review Order</h3>${cart.length ? cart.map(item => { const p = byId(item.id); return `<div class="summary-line"><span>${p.name} × ${item.qty}</span><strong>${money(p.price * item.qty)}</strong></div>`; }).join('') : '<p class="section-copy">Cart is empty.</p>'}<div class="summary-line total"><span>Total</span><strong>${money(totals.total)}</strong></div></aside>
+      <aside class="summary-card"><h3>Review Order</h3>${cart.length ? cart.map(item => { const p = byId(item.id); return `<div class="summary-line"><span>${p.name} × ${item.qty}</span><strong>${money(p.price * item.qty)}</strong></div>`; }).join('') : '<p class="section-copy">Cart is empty.</p>'}<div class="summary-line"><span>Subtotal</span><strong>${money(totals.subtotal)}</strong></div><div class="summary-line"><span>Shipping</span><strong>Free</strong></div>${totals.giftWrap ? `<div class="summary-line"><span>Gift Wrap</span><strong>${money(totals.giftWrap)}</strong></div>` : ''}${totals.couponDiscount ? `<div class="summary-line"><span>Coupon Discount</span><strong>- ${money(totals.couponDiscount)}</strong></div>` : ''}<div class="summary-line total"><span>Total</span><strong>${money(totals.total)}</strong></div></aside>
     </div>`;
   qs('[data-checkout-form]')?.addEventListener('submit', (e) => {
     e.preventDefault();
