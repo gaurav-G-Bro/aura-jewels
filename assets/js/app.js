@@ -44,7 +44,7 @@ function shell() {
               <button class="nav-link">Categories ▾</button>
               <div class="mega">
                 <div class="container mega-grid">
-                  <a class="mega-card" href="shop.html"><img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80" alt="Jewellery collection"><div><strong>Festival Ready</strong><span>Shop the premium edit</span></div></a>
+                  <a class="mega-card" href="shop.html"><img src="images/img1.avif" alt="Jewellery collection"><div><strong>Festival Ready</strong><span>Shop the premium edit</span></div></a>
                   <div class="mega-col">
                     <h4>Shop by Category</h4>
                     ${['Jewellery Sets','Necklaces','Earrings','Bangles','Bracelets','Rings','Anklets','Bags'].map(c => `<a href="${shopUrl({ category: c })}">${c}</a>`).join('')}
@@ -103,7 +103,7 @@ function shell() {
           <div><h4>Information</h4><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="blog.html">Blog</a><a href="policies.html#privacy">Privacy Policy</a><a href="policies.html#terms">Terms & Conditions</a></div>
           <div><h4>Top Categories</h4>${['Bracelets','Earrings','Necklaces','Rings','Anklets','Bags'].map(c => `<a href="${shopUrl({ category: c })}">${c}</a>`).join('')}</div>
         </div>
-        <div class="container copyright"><span>© 2026 Aarunya Jewels Demo. All Rights Reserved.</span><span>Instagram · Facebook · WhatsApp</span></div>
+        <div class="container copyright"><span>© 2026 Aarunya Jewels Demo. All Rights Reserved. Designed by - <a href="https://www.linkedin.com/in/gaurav-kumar-a945231b0/">Gaurav</a></span><span>Instagram · Facebook · WhatsApp</span></div>
       </footer>`;
   }
 
@@ -273,7 +273,7 @@ function productCard(product) {
     <article class="product-card" data-product-card data-category="${product.category}" data-price="${product.price}">
       <div class="product-media">
         <a class="product-image-link" href="${productUrl(product.id)}" aria-label="View ${product.name}">
-          <img src="${product.images[0]}" alt="${product.name}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/900x900/f9e4dc/7d2734?text=Jewellery'">
+          <img src="${product.images[0]}" alt="${product.name}" loading="lazy" onerror="this.onerror=null;this.src='images/img2.svg'">
         </a>
         <span class="product-badge">${product.badge}</span>
         <div class="product-actions">
@@ -328,7 +328,7 @@ function quickView(id) {
   openModal(`
     <div class="quick-view">
       <div class="quick-view-media">
-        <img src="${p.images[0]}" alt="${p.name}" onerror="this.onerror=null;this.src='https://placehold.co/900x900/f9e4dc/7d2734?text=Jewellery'">
+        <img src="${p.images[0]}" alt="${p.name}" onerror="this.onerror=null;this.src='images/img2.svg'">
       </div>
       <div class="quick-info">
         <button type="button" class="close-btn" style="float:right" data-modal-close>×</button>
@@ -407,9 +407,9 @@ function renderHome() {
   const heroSlides = qs('[data-hero-slides]');
   if (heroSlides) {
     const slides = [
-      'https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=1200&q=80'
+      'images/imm1.avif',
+      'images/imm2.avif',
+      'images/imm3.avif'
     ];
     heroSlides.innerHTML = slides.map((src, i) => `<div class="hero-slide ${i === 0 ? 'active' : ''}"><img src="${src}" alt="Premium jewellery look ${i+1}"></div>`).join('') + `<div class="hero-dots">${slides.map((_, i) => `<button class="hero-dot ${i === 0 ? 'active' : ''}" data-dot="${i}" aria-label="Slide ${i+1}"></button>`).join('')}</div><div class="hero-floating"><div><strong>Festive Gold Edit</strong><span>Curated pieces under ₹1599</span></div><a class="btn gold" href="shop.html">Explore</a></div>`;
     let index = 0;
@@ -497,7 +497,7 @@ function renderProductPage() {
   root.innerHTML = `
     <div class="gallery">
       <div class="thumb-list">${product.images.map((src, i) => `<button class="thumb ${i===0?'active':''}" data-thumb="${src}"><img src="${src}" alt="${product.name} ${i+1}"></button>`).join('')}</div>
-      <div class="main-photo"><img data-main-photo src="${product.images[0]}" alt="${product.name}" onerror="this.onerror=null;this.src='https://placehold.co/900x900/f9e4dc/7d2734?text=Jewellery'"></div>
+      <div class="main-photo"><img data-main-photo src="${product.images[0]}" alt="${product.name}" onerror="this.onerror=null;this.src='images/img2.svg'"></div>
     </div>
     <div class="detail-panel">
       <span class="badge">${product.badge}</span>

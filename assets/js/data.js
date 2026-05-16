@@ -17,8 +17,8 @@ const STORE_PRODUCTS = [
     badge: 'Sale',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80'
+      'images/img4.avif',
+      'images/img5.avif'
     ],
     description: 'A graceful gold-plated jewellery set with ruby accents and a festive kundan-inspired finish for weddings, receptions, and family functions.'
   },
@@ -40,8 +40,8 @@ const STORE_PRODUCTS = [
     badge: 'Best Seller',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80'
+      'images/img6.avif',
+      'images/img7.avif'
     ],
     description: 'A rose-gold statement set crafted for modern celebrations, cocktail nights, and premium gifting.'
   },
@@ -63,8 +63,8 @@ const STORE_PRODUCTS = [
     badge: 'Limited',
     sizes: ['2.4', '2.6', '2.8'],
     images: [
-      'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=900&q=80'
+      'images/img8.avif',
+      'images/img9.avif'
     ],
     description: 'A set of floral bangles with polished dual-tone details and sparkling stone work.'
   },
@@ -86,8 +86,8 @@ const STORE_PRODUCTS = [
     badge: 'Sale',
     sizes: ['Adjustable'],
     images: [
-      'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&w=900&q=80'
+      'images/img10.avif',
+      'images/img11.avif'
     ],
     description: 'A feminine adjustable ring with floral accents, perfect for gifting or everyday sparkle.'
   },
@@ -109,8 +109,8 @@ const STORE_PRODUCTS = [
     badge: 'New',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?auto=format&fit=crop&w=900&q=80'
+      'images/img12.avif',
+      'images/img13.avif'
     ],
     description: 'Elegant pearl drop earrings that add a soft traditional glow to sarees, gowns, and festive wear.'
   },
@@ -132,8 +132,8 @@ const STORE_PRODUCTS = [
     badge: 'Sold Out',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1619119069152-a2b331eb392a?auto=format&fit=crop&w=900&q=80'
+      'images/img14.avif',
+      'images/img15.avif'
     ],
     description: 'A bold oxidised anklet pair made for Indo-western styling and ethnic everyday looks.'
   },
@@ -155,8 +155,8 @@ const STORE_PRODUCTS = [
     badge: 'Hot',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=900&q=80'
+      'images/img16.avif',
+      'images/img17.avif'
     ],
     description: 'A rich green choker set with meenakari-inspired detailing, created for mehendi and festive functions.'
   },
@@ -178,8 +178,8 @@ const STORE_PRODUCTS = [
     badge: 'Sale',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?auto=format&fit=crop&w=900&q=80'
+      'images/img18.avif',
+      'images/img19.avif'
     ],
     description: 'A delicate rose-gold bracelet with pink stone accents for parties and premium western outfits.'
   },
@@ -201,8 +201,8 @@ const STORE_PRODUCTS = [
     badge: 'Trending',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1589674781759-c21c37956a44?auto=format&fit=crop&w=900&q=80'
+      'images/img20.avif',
+      'images/img21.avif'
     ],
     description: 'Statement chandbalis with maroon stone detailing and a traditional golden finish.'
   },
@@ -224,8 +224,8 @@ const STORE_PRODUCTS = [
     badge: 'Wedding Pick',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1561828995-aa79a2db86dd?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=900&q=80'
+      'images/img22.avif',
+      'images/img23.avif'
     ],
     description: 'A bridal-inspired maangtikka with pearl and kundan details for traditional occasions.'
   },
@@ -247,8 +247,8 @@ const STORE_PRODUCTS = [
     badge: 'Daily Wear',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1611085583191-a3b181a88401?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1611955167811-4711904bb9f8?auto=format&fit=crop&w=900&q=80'
+      'images/img24.avif',
+      'images/img25.avif'
     ],
     description: 'A minimal mangalsutra with modern proportions and a lightweight daily-wear finish.'
   },
@@ -270,28 +270,28 @@ const STORE_PRODUCTS = [
     badge: 'New',
     sizes: ['One Size'],
     images: [
-      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=80'
+      'images/img26.avif',
+      'images/img27.avif'
     ],
     description: 'A festive potli bag with embroidered detailing to pair with lehengas, sarees, and reception wear.'
   }
 ];
 
 const CATEGORIES = [
-  { name: 'Necklaces', image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80' },
-  { name: 'Bangles', image: 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=900&q=80' },
-  { name: 'Bracelets', image: 'https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?auto=format&fit=crop&w=900&q=80' },
-  { name: 'Earrings', image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80' },
-  { name: 'Rings', image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80' },
-  { name: 'Anklets', image: 'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=900&q=80' },
-  { name: 'Maangtikka', image: 'https://images.unsplash.com/photo-1561828995-aa79a2db86dd?auto=format&fit=crop&w=900&q=80' },
-  { name: 'Bags', image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80' }
+  { name: 'Necklaces', image: 'images/img28.avif' },
+  { name: 'Bangles', image: 'images/img29.avif' },
+  { name: 'Bracelets', image: 'images/img30.avif' },
+  { name: 'Earrings', image: 'images/img31.avif' },
+  { name: 'Rings', image: 'images/img32.avif' },
+  { name: 'Anklets', image: 'images/img33.avif' },
+  { name: 'Maangtikka', image: 'images/img34.avif' },
+  { name: 'Bags', image: 'images/img35.avif' }
 ];
 
 const OCCASIONS = [
-  { name: 'Cocktail Party', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80' },
-  { name: 'Sangeet', image: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=1000&q=80' },
-  { name: 'Bridesmaid', image: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=1000&q=80' },
-  { name: 'Mehendi', image: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=1000&q=80' },
-  { name: 'Reception', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80' }
+  { name: 'Cocktail Party', image: 'images/img36.avif' },
+  { name: 'Sangeet', image: 'images/img37.avif' },
+  { name: 'Bridesmaid', image: 'images/img38.avif' },
+  { name: 'Mehendi', image: 'images/img39.avif' },
+  { name: 'Reception', image: 'images/img33.avif' }
 ];
