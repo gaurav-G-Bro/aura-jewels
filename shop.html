@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop All Jewellery | Aarunya Jewels Demo</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="breadcrumb">Home / Shop</div>
+        <span class="eyebrow">Shop All</span>
+        <h1 class="section-title">Premium jewellery collection</h1>
+        <p class="section-copy" data-page-subtitle>Filter by category, occasion, color, price and stock. Sort by popularity, rating or price.</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container shop-layout">
+        <aside class="filters" data-filters></aside>
+        <div>
+          <div class="shop-toolbar">
+            <div class="left"><button class="btn secondary mobile-filter-btn" data-mobile-filter>Filter</button><strong data-result-count>0 products</strong></div>
+            <select class="select-control" data-sort style="max-width:230px"><option value="featured">Best selling</option><option value="rating">Top rated</option><option value="price-asc">Price, low to high</option><option value="price-desc">Price, high to low</option></select>
+          </div>
+          <div class="product-grid" data-shop-grid></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <div id="global-ui"></div>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
