@@ -418,9 +418,10 @@ textarea.form-control { padding: 14px; min-height: 120px; resize: vertical; }
   opacity: 0; visibility: hidden; pointer-events: none; transition: .22s ease;
 }
 .modal.open { opacity: 1; visibility: visible; pointer-events: auto; }
-.modal .overlay { opacity: 0; visibility: hidden; pointer-events: none; }
+.modal .overlay { opacity: 0; visibility: hidden; pointer-events: none; z-index: 0; }
 .modal.open .overlay { opacity: 1; visibility: visible; pointer-events: auto; }
-.modal-card { width: min(860px, 100%); max-height: 86vh; overflow: auto; background: #fff; border-radius: 28px; box-shadow: var(--shadow); position: relative; }
+.modal-card { width: min(860px, 100%); max-height: 86vh; overflow: auto; background: #fff; border-radius: 28px; box-shadow: var(--shadow); position: relative; z-index: 2; }
+.modal-card * { position: relative; z-index: 3; }
 .quick-view { display: grid; grid-template-columns: .9fr 1.1fr; gap: 0; }
 .quick-view-media { min-height: 0; background: var(--cream); }
 .quick-view-media img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; object-position: center; }
